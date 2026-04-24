@@ -11,8 +11,6 @@ services:
             - "443:443"
         volumes:
             - .:/var/www/html:ro,cached
-            - ./var/log/nginx:/var/log/nginx
-            - ./infra/nginx/conf.d:/etc/nginx/conf.d
             - ./infra/nginx/conf.d:/etc/nginx/conf.d
         depends_on:
             - php

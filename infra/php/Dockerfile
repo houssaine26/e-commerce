@@ -24,6 +24,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
       libzip-dev \
       wget \
       librabbitmq-dev \
+      libxslt-dev \
+      libldap2-dev \
+      libssl-dev \
     && pecl install amqp \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
     && docker-php-ext-configure intl \
@@ -65,10 +68,6 @@ RUN pecl install xdebug-3.3.1 && \
 
 # Installer MongoDB
 #RUN pecl install mongodb && docker-php-ext-enable mongodb
-
-RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list && \
-    apt-get update && apt-get upgrade -y
-RUN apt-get install -y git  libxslt-dev libldap2-dev libssl-dev
 
 # Installer les extensions PHP
 #COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
