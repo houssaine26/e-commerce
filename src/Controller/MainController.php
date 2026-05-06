@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Service\Cart\CartHandler;
+use App\Dto\CartItemDto;
+use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends AbstractController
 {
@@ -73,5 +76,52 @@ class MainController extends AbstractController
     public function categories(): Response
     {
         return $this->render('main/browse_categories.html.twig');
+    }
+
+    #[Route('/cart', name: 'app_cart')]
+    public function cart(CartHandler $cartHandler, ProductRepository $productRepository): Response
+    {
+        $cartItems = $cartHandler->getCartItems();
+        $productsInCart = [];
+        $total = 0;
+
+        foreach ($cartItems as $productId => $quantity) {
+            $product = $productRepository->find($productId);
+            if ($product) {
+                $subtotal = $product->getPrice() * $quantity;
+                $productsInCart[] = [
+                    'product' => $product,
+                    'quantity' => $quantity,
+                    'subtotal' => $subtotal
+                ];
+                $total += $subtotal;
+            }
+        }
+
+        return $this->render('main/cart.html.twig', [
+            'items' => $productsInCart,
+            'total' => $total
+        ]);
+    }
+
+    #[Route('/add-to-cart/{id}', name: 'app_add_to_cart', methods: ['POST'])]
+    public function addToCart(int $id, Request $request, CartHandler $cartHandler): Response
+    {
+        $quantity = $request->request->get('quantity', 1);
+        $cartItemDto = new CartItemDto($id, (int)$quantity);
+        $cartHandler->handle($cartItemDto);
+
+        $this->addFlash('success', 'Product added to cart!');
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cart/remove/{id}', name: 'app_cart_remove')]
+    public function remove(int $id, CartHandler $cartHandler): Response
+    {
+        $cartHandler->remove($id);
+        $this->addFlash('success', 'Product removed from cart!');
+
+        return $this->redirectToRoute('app_cart');
     }
 }

@@ -34,7 +34,7 @@
             </div>
 
             <!-- Add to Cart Form -->
-            <form action="{{ path('app_cart') }}" method="GET">
+            <form action="{{ path('app_add_to_cart', {'id': product.id}) }}" method="POST">
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
                     <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="max-width: 100px;">

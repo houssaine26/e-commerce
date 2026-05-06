@@ -24,24 +24,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- Static data for now as per etape 2 -->
+                            {% for item in items %}
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('images/thumbnail.png') }}" class="img-thumbnail me-3" alt="Product" style="width: 80px; height: 80px; object-fit: cover;">
+                                        <img src="{{ item.product.image ? asset('images/' ~ item.product.image) : 'https://via.placeholder.com/80x80' }}" class="img-thumbnail me-3" alt="{{ item.product.name }}" style="width: 80px; height: 80px; object-fit: cover;">
                                         <div>
-                                            <h6 class="mb-0">Wireless Headphones</h6>
-                                            <small class="text-muted">Color: Black</small>
+                                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                                            <small class="text-muted">{{ item.product.category.name|default('Uncategorized') }}</small>
                                         </div>
                                     </div>
                                 </td>
-                                <td>$79.99</td>
-                                <td>2</td>
-                                <td class="fw-bold">$159.98</td>
+                                <td>${{ item.product.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="fw-bold">${{ item.subtotal }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                    <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}" class="btn btn-sm btn-outline-danger">Remove</a>
                                 </td>
                             </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Your cart is empty.</td>
+                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -65,12 +70,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <span>$369.96</span>
+                        <span>${{ total }}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <strong>Total:</strong>
-                        <strong class="text-success">$410.36</strong>
+                        <strong class="text-success">${{ total }}</strong>
                     </div>
                     <div class="d-grid">
                         <button class="btn btn-success btn-lg">Proceed to Checkout</button>
