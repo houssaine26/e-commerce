@@ -10,8 +10,8 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-body text-center">
                         <img src="{{ asset('images/profile.png') }}" class="rounded-circle mb-3" alt="Profile Picture" style="width: 150px; height: 150px; object-fit: cover;">
-                        <h4>John Doe</h4>
-                        <p class="text-muted">Member since 2024</p>
+                        <h4>{{ app.user.firstName }} {{ app.user.lastName }}</h4>
+                        <p class="text-muted">Member since {{ app.user.id ? '2024' : 'N/A' }}</p>
                         <button class="btn btn-outline-primary btn-sm">Edit Profile</button>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                                 <h6 class="mb-0">Full Name</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                John Doe
+                                {{ app.user.firstName }} {{ app.user.lastName }}
                             </div>
                         </div>
                         <hr>
@@ -36,7 +36,7 @@
                                 <h6 class="mb-0">Email</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                john.doe@example.com
+                                {{ app.user.email }}
                             </div>
                         </div>
                     </div>

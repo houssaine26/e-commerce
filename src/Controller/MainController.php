@@ -66,16 +66,12 @@ class MainController extends AbstractController
         return $this->render('main/profile.html.twig');
     }
 
-    #[Route('/login', name: 'app_login')]
-    public function login(): Response
-    {
-        return $this->render('main/login.html.twig');
-    }
-
     #[Route('/categories', name: 'app_categories')]
-    public function categories(): Response
+    public function categories(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('main/browse_categories.html.twig');
+        return $this->render('main/browse_categories.html.twig', [
+            'categories' => $categoryRepository->findAll(),
+        ]);
     }
 
     #[Route('/cart', name: 'app_cart')]
